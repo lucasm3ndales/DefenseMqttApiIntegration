@@ -81,7 +81,9 @@ public class DefenseService(LiteDatabase liteDatabase) : IDefenseService
             throw new Exception($"Error to get defense events. Reason: {ex.Message}");
         }
     }
-
+    
+    
+    // Método para efetuar logina antes de fazer outras requisi
     private async Task DoLogin()
     {
         try
@@ -144,8 +146,11 @@ public class DefenseService(LiteDatabase liteDatabase) : IDefenseService
             SecretVectorRSA = secondRes.SecretVector; // secretVector utilizado para a configuração do MQTT
             SecretKeyRSA = secondRes.SecretKey; // secretKey utilizado para a configurção do MQTT
             LoginUserId = secondRes.UserId; // userId utilizado para configurar o MQTT
-            
-            await SendKeepAlive(credentialsDto); // Inicia o Envio do keepAlive para o defense
+
+            _ = Task.Run(async () =>
+            {
+                await SendKeepAlive(credentialsDto); // Inicia o Envio do keepAlive para o defense
+            });
         }
         catch (Exception ex)
         {
